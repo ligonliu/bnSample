@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import pymc3 as pm, arviz, os, shutil, sys, glob
 from BN import BN

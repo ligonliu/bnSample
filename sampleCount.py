@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import csv, glob, gc, os, pyAgrum as gum, numpy as np
 from itertools import chain
@@ -42,12 +42,13 @@ if __name__ == '__main__':
         print('Usage: sampleCount.py dataset_name [dataset2_name] ...')
         exit(0)
 
-    for i in range(1, len(sys.argv)):
+    for n in range(1, len(sys.argv)):
 
         gc.collect()
-        ds_name = sys.argv[i]
+        ds_name = sys.argv[n]
 
         sample_csv_dir = 'samples/' + ds_name
+        assert os.path.exists(sample_csv_dir)
         csv_files = glob.glob(sample_csv_dir + '/*.csv')
         assert len(csv_files) > 0
 
@@ -110,4 +111,3 @@ if __name__ == '__main__':
             print('Counting and metadata saved in {0}'.format(count_save_dir))
         else:
             print('Counting file or metadata generation failed in {0}'.format(count_save_dir))
-            continue

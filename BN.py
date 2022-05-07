@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pyAgrum as gum, pymc3 as pm, theano,os
 from tempfile import mkstemp
 
@@ -125,6 +127,3 @@ if __name__ == '__main__':
         fp = gzip.open(new_fn, 'wb')
         pickle.dump(bn_obj, fp)
         fp.close()
-
-        fp = gzip.open(new_fn, 'rb')
-        obj:BN = pickle.load(fp)
