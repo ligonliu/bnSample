@@ -32,34 +32,39 @@ def getMetaData(bn_obj:BN):
 if __name__ == '__main__':
 
     if len(sys.argv)<4:
-        print('Usage: bnSample.py model_name output_name.nc sample_size')
-        print('sample will be saved in output_name.nc as netCDF file')
+        print('Usage: bnSample.py model_name <csv|netCDF> sample_size')
+        print('sample will be saved in samples/model_name/ as CSV files or samples/model_name.nc as netCDF file')
         print('actual sampled size may be slightly larger than sample_size')
+        print('in which case, discard some initial samples for better convergence')
         exit(0)
 
-    output_file_name = sys.argv[2]
-
     thread_count = os.cpu_count()
-
-    model_file = "models/{0}.bif".format(sys.argv[1])
+    model_name = sys.argv[1]
+    model_file = "models/{0}.bif".format(model_name)
     assert os.path.exists(model_file)
+
+    output_format = sys.argv[2]
 
     bn_obj = BN(model_file)
     model = bn_obj.pymc3
-    sample_size = int(sys.argv[3])
-    draws = sample_size // thread_count
+    sample_size = int(sys.argv[-1])
+    draws = 1 + sample_size // thread_count
+
+    if not os.path.exists('samples'):
+        os.mkdir('samples')
 
     with model as model:
         metadata = bn_obj.getMetaData()
-        is_netcdf = (output_file_name[-3:]=='.nc')
-        if is_netcdf:
+
+        if output_format=='netcdf':
             trace = pm.sample(draws, cores=thread_count, return_inferencedata=True)
+            output_file_name = 'samples/{0}.nc'.format(model_name)
             arviz.to_netcdf(trace, output_file_name)
             # it could be read out by
             # v = next(trace.values())
             # df = v.to_dataframe()  , could also to_ndarray and some other formats
-
-        else:
-            db = pm.backends.Text(name=output_file_name, model=model)
-            pm.sample(draws, trace=db, cores=thread_count, return_inferencedata=False)
+        elif output_format=='csv':
+            db = pm.backends.Text(name='samples/{0}'.format(model_name), model=model)
+            trace = pm.sample(draws,trace=db, cores=thread_count, return_inferencedata=True)
+            db.close()
 

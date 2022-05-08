@@ -104,10 +104,3 @@ if __name__ == '__main__':
         np.save(proj_dir+'/all.npy', all_data)
         np.save(proj_dir+'/all.count.npy', counts)
         np.save(proj_dir+'/all.prob.npy', probs)
-
-        # shutil.copyfile(sample_csv_dir + '/metadata.json', count_save_dir + '/metadata.json')
-
-        if os.path.exists(count_save_dir+'/count.txt.gz') and os.path.exists(count_save_dir+'/metadata.json'):
-            print('Counting and metadata saved in {0}'.format(count_save_dir))
-        else:
-            print('Counting file or metadata generation failed in {0}'.format(count_save_dir))

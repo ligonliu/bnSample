@@ -11,7 +11,7 @@ In order to use the command line interfaces, you are recommended to including th
 
 ## Sampling
 
-    bnSample.py model.bif <output_name.nc|output_csv_dir> sample_size
+    bnSample.py model.bif <netCDF|csv> sample_size
 if output name ends with .nc, sampling results will be saved in netCDF format
 else, it is considered a directory to store sampling results in multiple CSV files, one for each chain.
 Note: sampleCount.py currently only supports CSV files saved in ./samples/dataset_name/
@@ -19,4 +19,6 @@ Note: sampleCount.py currently only supports CSV files saved in ./samples/datase
 ## Aggregating the sample
 
     sampleCount.py dataset_name
-It will count the sampling results from CSV files in ./samples/dataset_name, and compute log probabilities for each unique value combinations.
+
+It will count the sampling results from CSV files in ./samples/dataset_name, and compute probabilities for each unique value combination. The results will be stored in ./samples/dataset_name/proj
+
